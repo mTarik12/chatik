@@ -1,8 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
+
+// app.use(require('cors'));
+
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "https://localhost:3000",
+        methods: ["GET", "POST"]
+    }
+});
 
 const PORT = 8080;
 
@@ -23,7 +32,7 @@ io.on('connection', socket => {
 });
 
 server.listen(PORT, (err) => {
-    
+
     if (err) {
         throw Error(err);
     }
