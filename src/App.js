@@ -1,12 +1,12 @@
 import React from 'react';
 import io from 'socket.io-client';
 
-function App() {
-  const connectSocket = () => io('https://localhost:8080');
+const App = () => {
+  const connectSocket = () => io();
 
   return (
-    <div className="App">
-      <button onClick={connectSocket}>CONNECT</button>
+     <div>
+		 <button onClick={connectSocket}>Connect</button>
     </div>
   );
 }

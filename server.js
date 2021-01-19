@@ -6,12 +6,7 @@ const app = express();
 // app.use(require('cors'));
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origin: "https://localhost:3000",
-        methods: ["GET", "POST"]
-    }
-});
+const io = require('socket.io')(server);
 
 const PORT = 8080;
 
@@ -23,7 +18,7 @@ const PORT = 8080;
 
 app.use(express.json());
 
-app.get('/chut', (req, res) => {
+app.get('/', (req, res) => {
     res.send(req.body);
 });
 
