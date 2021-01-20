@@ -1,12 +1,15 @@
 import React from "react";
+import { useState } from "react";
 
 import "./Chat.style.css";
 
 const ChatComponent = () => {
+  const [messageValue, setmessageValue] = useState("");
+
   return (
     <div className="chat">
       <div className="chat-users">
-        <b>Users (1):</b>
+        <b>Online (1):</b>
         <ul>
           <li>Test User</li>
         </ul>
@@ -20,9 +23,14 @@ const ChatComponent = () => {
           </div>
         </div>
         <form>
-          <textarea className="form-control" rows="3"></textarea>
+          <textarea
+            className="form-control"
+            rows="3"
+            value={messageValue}
+            onChange={(e) => setmessageValue(e.target.value)}
+          ></textarea>
           <button type="button" className="btn btn-primary">
-            Отправить
+            Send message
           </button>
         </form>
       </div>
