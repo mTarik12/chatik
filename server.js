@@ -18,7 +18,7 @@ app.get('/chat', (req, res) => {
 });
 
 app.post('/chat', (req, res) => {
-    const {chatID, userName} = req.body;
+    const { chatID, userName } = req.body;
 
     if (!chat.has(chatID)) {
         chat.set(chatID, new Map([
@@ -27,10 +27,17 @@ app.post('/chat', (req, res) => {
         ]),
         );
     }
-    res.send(); 
+    res.send();
 });
 
 io.on('connection', socket => {
+    socket.on('CHAT:JOINED', ({chatID, userName}) => {
+       socket.join(chatID);
+       chat.get(chatID).get('users').set(socket.id, userName);
+       const users = chat.get(chatID).get('users').values();
+       socket.to(chatID).broadcast.emit('CHAT:IN', ...users);
+    });
+
     console.log('user connected', socket.id);
 });
 

@@ -13,14 +13,15 @@ const EnterComponent = ({ onLogin }) => {
     if (!chatID || !userName) {
       return alert("Incorrect data");
     }
+    const userData = {
+      chatID,
+      userName,
+    };
 
     setIsLoading(true);
 
-    await axios.post("/chat", {
-      chatID,
-      userName,
-    });
-    onLogin();
+    await axios.post("/chat", userData);
+    onLogin(userData);
   };
 
   return (

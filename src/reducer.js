@@ -5,7 +5,9 @@ export default (state, action) => {
         case 'JOINED':
             return {
                 ...state,
-                joined: action.payload
+                joined: true,
+                chatID: action.payload.chatID,
+                userName: action.payload.userName,
             };
         default:
             return state;
