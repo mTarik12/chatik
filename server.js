@@ -1,25 +1,33 @@
 const express = require('express');
 const cors = require('cors');
+const { json } = require('express');
 
 const app = express();
 
-// app.use(require('cors'));
+app.use(express.json());
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const PORT = 8080;
 
-// const users = {
-//     username: [],
-//     userPhoto: [],
-//     userMessage: []
-// }
+const chat = new Map();
 
-app.use(express.json());
+app.get('/chat', (req, res) => {
+    res.json(chat);
+});
 
-app.get('/', (req, res) => {
-    res.send(req.body);
+app.post('/chat', (req, res) => {
+    const {chatID, userName} = req.body;
+
+    if (!chat.has(chatID)) {
+        chat.set(chatID, new Map([
+            ['users', new Map()],
+            ['messages', []],
+        ]),
+        );
+    }
+    res.send(); 
 });
 
 io.on('connection', socket => {

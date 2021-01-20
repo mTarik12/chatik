@@ -1,14 +1,27 @@
 import React from 'react';
-import io from 'socket.io-client';
+import { useReducer } from 'react';
+
+import EnterComponent from './components/Enter/Enter.component';
+import reducer from './reducer';
+import socket from './socket';
+
+import './App.css';
+
 
 const App = () => {
-  const connectSocket = () => io();
+  const [state, dispatch] = useReducer(reducer, {
+    joined: false,
+  });
 
-  return (
-     <div>
-		 <button onClick={connectSocket}>Connect</button>
-    </div>
-  );
+  const onLogin = () => {
+    dispatch({
+      type: 'JOINED',
+      payload: true,
+    });
+  }
+  
+  return <div className="wrapper">{!state.isAuth && <EnterComponent onLogin={onLogin} />} </div>
+  
 }
 
 export default App;
