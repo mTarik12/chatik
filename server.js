@@ -1,20 +1,24 @@
 const express = require('express');
-const cors = require('cors');
-const { json } = require('express');
 
 const app = express();
-
-app.use(express.json());
-
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+
+app.use(express.json());
 
 const PORT = 8080;
 
 const chat = new Map();
 
-app.get('/chat', (req, res) => {
-    res.json(chat);
+app.get('/chat/:id', (req, res) => {
+    const { id: chatID } = req.params;
+    console.log(chatID);
+    if (chat.has(chatID)) {
+        res.send({
+            users: [...chat.get(chatID).get('users').values()],
+            messages: [...chat.get(chatID).get('messages').values()]
+        });
+    } else res.send({ users: [], messages: [] });
 });
 
 app.post('/chat', (req, res) => {
@@ -35,14 +39,14 @@ io.on('connection', socket => {
         socket.join(chatID);
         chat.get(chatID).get('users').set(socket.id, userName);
         const users = [...chat.get(chatID).get('users').values()];
-        socket.to(chatID).broadcast.emit('CHAT:IN', users);
+        socket.to(chatID).broadcast.emit('CHAT:SET_USERS', users);
     });
 
     socket.on('disconnect', () => {
         chat.forEach((value, chatID) => {
 
             if (value.get('users').delete(socket.id)) {
-                const users = [...chat.get(chatID).get('users').values()];
+                const users = [...value.get('users').values()];
                 socket.to(chatID).broadcast.emit('CHAT:SET_USERS', users);
             }
         });
