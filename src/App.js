@@ -14,6 +14,8 @@ const App = () => {
     joined: false,
     chatID: null,
     userName: null,
+    users: [],
+    messages: [],
   });
 
   const onLogin = (userData) => {
@@ -24,14 +26,20 @@ const App = () => {
     socket.emit('CHAT:JOINED', userData)
   };
 
-  useEffect(() => {
-    socket.on('CHAT:IN', (users) => {
-      console.log('new user', users);
+  const setUsers = (users) => {
+    dispatch({
+      type: 'SET_USERS',
+      payload: users,
     });
+  }
+
+  useEffect(() => {
+    socket.on('CHAT:IN', setUsers);
+    socket.on('CHAT:SET_USERS', setUsers);
   }, []);
 
 
-  return <div className="wrapper">{!state.joined ? <EnterComponent onLogin={onLogin} /> : <ChatComonent /> } </div>
+  return <div className="wrapper">{!state.joined ? <EnterComponent onLogin={onLogin} /> : <ChatComonent {...state} />} </div>
 
 }
 

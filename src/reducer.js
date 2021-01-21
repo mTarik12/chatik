@@ -9,6 +9,18 @@ export default (state, action) => {
                 chatID: action.payload.chatID,
                 userName: action.payload.userName,
             };
+
+        case 'SET_USERS':
+            return {
+                ...state,
+                users: action.payload,
+            };
+
+        case 'SET_MESSAGES':
+            return {
+                ...state,
+                messages: action.payload,
+            };
         default:
             return state;
     }

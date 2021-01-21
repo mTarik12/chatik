@@ -31,11 +31,21 @@ app.post('/chat', (req, res) => {
 });
 
 io.on('connection', socket => {
-    socket.on('CHAT:JOINED', ({chatID, userName}) => {
-       socket.join(chatID);
-       chat.get(chatID).get('users').set(socket.id, userName);
-       const users = chat.get(chatID).get('users').values();
-       socket.to(chatID).broadcast.emit('CHAT:IN', ...users);
+    socket.on('CHAT:JOINED', ({ chatID, userName }) => {
+        socket.join(chatID);
+        chat.get(chatID).get('users').set(socket.id, userName);
+        const users = [...chat.get(chatID).get('users').values()];
+        socket.to(chatID).broadcast.emit('CHAT:IN', users);
+    });
+
+    socket.on('disconnect', () => {
+        chat.forEach((value, chatID) => {
+
+            if (value.get('users').delete(socket.id)) {
+                const users = [...chat.get(chatID).get('users').values()];
+                socket.to(chatID).broadcast.emit('CHAT:SET_USERS', users);
+            }
+        });
     });
 
     console.log('user connected', socket.id);

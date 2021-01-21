@@ -3,15 +3,17 @@ import { useState } from "react";
 
 import "./Chat.style.css";
 
-const ChatComponent = () => {
+const ChatComponent = ({ users, messages }) => {
   const [messageValue, setmessageValue] = useState("");
 
   return (
     <div className="chat">
       <div className="chat-users">
-        <b>Online (1):</b>
+        <b>Online: {users.length}</b>
         <ul>
-          <li>Test User</li>
+          {users.map((name) => (
+            <li>{name}</li>
+          ))}
         </ul>
       </div>
       <div className="chat-messages">
