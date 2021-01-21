@@ -4,7 +4,14 @@ import socket from "../../socket";
 
 import "./Chat.style.css";
 
-const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
+const ChatComponent = ({
+  users,
+  messages,
+  userName,
+  chatID,
+  onAddMessage,
+  onAddRoboMessage,
+}) => {
   const [messageValue, setmessageValue] = useState("");
   const messagesRef = useRef(null);
 
@@ -15,6 +22,16 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
       text: messageValue,
     });
     onAddMessage({ userName, text: messageValue });
+    setmessageValue("");
+  };
+  const sendRoboMessage = () => {
+    socket.emit("CHAT:ROBO_MESSAGE", {
+      userName,
+      chatID,
+      text: messageValue,
+    });
+    onAddRoboMessage({ userName, text: messageValue });
+    console.log(onAddRoboMessage({ userName, text: messageValue }));
     setmessageValue("");
   };
 
@@ -58,6 +75,13 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
             onClick={sendMessage}
           >
             Send message
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={sendRoboMessage}
+          >
+            Send Robo message
           </button>
         </form>
       </div>
