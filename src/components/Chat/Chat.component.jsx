@@ -1,28 +1,44 @@
 import React from "react";
 import { useState } from "react";
+import socket from "../../socket";
 
 import "./Chat.style.css";
 
-const ChatComponent = ({ users, messages }) => {
+const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
   const [messageValue, setmessageValue] = useState("");
+
+  const sendMessage = () => {
+    socket.emit("CHAT:NEW_MESSAGE", {
+      userName,
+      chatID,
+      text: messageValue,
+    });
+    onAddMessage({ userName, text: messageValue });
+    setmessageValue("");
+  };
 
   return (
     <div className="chat">
       <div className="chat-users">
+        Chat: <b>{chatID}</b>
+        <hr />
         <b>Online: {users.length}</b>
         <ul>
-          {users.map((name) => (
-            <li>{name}</li>
+          {users.map((name, index) => (
+            <li key={name + index}>{name}</li>
           ))}
         </ul>
       </div>
       <div className="chat-messages">
-        <div className="messages"></div>
-        <div className="message">
-          <p>Message is here</p>
-          <div>
-            <span>Test User</span>
-          </div>
+        <div className="messages">
+          {messages.map((messages) => (
+            <div className="message">
+              <p>{messages.text}</p>
+              <div>
+                <span>{messages.userName}</span>
+              </div>
+            </div>
+          ))}
         </div>
         <form>
           <textarea
@@ -31,7 +47,11 @@ const ChatComponent = ({ users, messages }) => {
             value={messageValue}
             onChange={(e) => setmessageValue(e.target.value)}
           ></textarea>
-          <button type="button" className="btn btn-primary">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={sendMessage}
+          >
             Send message
           </button>
         </form>

@@ -41,12 +41,20 @@ const App = () => {
     });
   }
 
+  const addMessage = (message) => {
+    dispatch({
+      type: 'NEW_MESSAGE',
+      payload: message
+    });
+  }
+
   useEffect(() => {
     socket.on('CHAT:SET_USERS', setUsers);
+    socket.on('CHAT:NEW_MESSAGE', addMessage);
   }, []);
 
 
-  return <div className="wrapper">{!state.joined ? <EnterComponent onLogin={onLogin} /> : <ChatComonent {...state} />} </div>
+  return <div className="wrapper">{!state.joined ? <EnterComponent onLogin={onLogin} /> : <ChatComonent {...state} onAddMessage={addMessage} />} </div>
 
 }
 
