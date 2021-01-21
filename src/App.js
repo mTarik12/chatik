@@ -27,11 +27,10 @@ const App = () => {
     socket.emit('CHAT:JOINED', userData);
 
     const { data } = await axios.get(`/chat/${userData.chatID}`);
-    setUsers(data.users);
-    // dispatch({
-    //   type: 'SET_DATA',
-    //   payload: data,
-    // });
+    dispatch({
+      type: 'SET_DATA',
+      payload: data,
+    });
   };
 
   const setUsers = (users) => {
