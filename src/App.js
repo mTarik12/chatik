@@ -48,11 +48,7 @@ const App = () => {
   }
 
   const addRoboMessage = (message) => {
-    dispatch({
-      type: 'ROBO_MESSAGE',
-      payload: message
-    });
-    return message.text;
+    addMessage(message);
   }
 
   useEffect(() => {

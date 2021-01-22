@@ -22,12 +22,6 @@ export default (state, action) => {
                 messages: [...state.messages, action.payload],
             };
 
-        case 'ROBO_MESSAGE':
-            return {
-                ...state,
-                messages: [...state.messages, action.payload],
-            };
-
         case 'SET_DATA':
             return {
                 ...state,

@@ -24,6 +24,7 @@ const ChatComponent = ({
     onAddMessage({ userName, text: messageValue });
     setmessageValue("");
   };
+
   const sendRoboMessage = () => {
     socket.emit("CHAT:ROBO_MESSAGE", {
       userName,
@@ -31,7 +32,7 @@ const ChatComponent = ({
       text: messageValue,
     });
     onAddRoboMessage({ userName, text: messageValue });
-    console.log(onAddRoboMessage({ userName, text: messageValue }));
+    onAddRoboMessage({ userName, text: messageValue });
     setmessageValue("");
   };
 
@@ -53,11 +54,11 @@ const ChatComponent = ({
       </div>
       <div className="chat-messages">
         <div className="messages" ref={messagesRef}>
-          {messages.map((messages) => (
+          {messages.map((messages, index) => (
             <div className="message">
-              <p>{messages.text}</p>
+              <p key={messages + index}>{messages.text}</p>
               <div>
-                <span>{messages.userName}</span>
+                <span key={messages.userName + index}>{messages.userName}</span>
               </div>
             </div>
           ))}
