@@ -23,6 +23,13 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
     setmessageValue("");
   };
 
+  const sendReverseMessage = () => {
+    socket.emit("CHAT:REVERSE_MESSAGE", messagesData);
+    onAddMessage({ userName, text: messageValue });
+    onAddMessage({ userName, text: messageValue.split("").reverse().join("") });
+    setmessageValue("");
+  };
+
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
@@ -70,6 +77,13 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
             onClick={sendRoboMessage}
           >
             Send Robo message
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={sendReverseMessage}
+          >
+            Send Reverse message
           </button>
         </form>
       </div>
