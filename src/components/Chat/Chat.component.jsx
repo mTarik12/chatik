@@ -26,7 +26,12 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
   const sendReverseMessage = () => {
     socket.emit("CHAT:REVERSE_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
-    onAddMessage({ userName, text: messageValue.split("").reverse().join("") });
+    setTimeout(() => {
+      onAddMessage({
+        userName,
+        text: messageValue.split("").reverse().join(""),
+      });
+    }, 3000);
     setmessageValue("");
   };
 
