@@ -4,35 +4,22 @@ import socket from "../../socket";
 
 import "./Chat.style.css";
 
-const ChatComponent = ({
-  users,
-  messages,
-  userName,
-  chatID,
-  onAddMessage,
-  onAddRoboMessage,
-}) => {
+const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
   const [messageValue, setmessageValue] = useState("");
   const messagesRef = useRef(null);
 
+  const messagesData = { userName, chatID, text: messageValue };
+
   const sendMessage = () => {
-    socket.emit("CHAT:NEW_MESSAGE", {
-      userName,
-      chatID,
-      text: messageValue,
-    });
+    socket.emit("CHAT:NEW_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
     setmessageValue("");
   };
 
   const sendRoboMessage = () => {
-    socket.emit("CHAT:ROBO_MESSAGE", {
-      userName,
-      chatID,
-      text: messageValue,
-    });
-    onAddRoboMessage({ userName, text: messageValue });
-    onAddRoboMessage({ userName, text: messageValue });
+    socket.emit("CHAT:ROBO_MESSAGE", messagesData);
+    onAddMessage({ userName, text: messageValue });
+    onAddMessage({ userName, text: messageValue });
     setmessageValue("");
   };
 

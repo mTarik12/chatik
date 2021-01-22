@@ -47,18 +47,14 @@ const App = () => {
     });
   }
 
-  const addRoboMessage = (message) => {
-    addMessage(message);
-  }
-
   useEffect(() => {
     socket.on('CHAT:SET_USERS', setUsers);
     socket.on('CHAT:NEW_MESSAGE', addMessage);
-    socket.on('CHAT:ROBO_MESSAGE', addRoboMessage);
+    socket.on('CHAT:ROBO_MESSAGE', addMessage);
   }, []);
 
 
-  return <div className="wrapper">{!state.joined ? <EnterComponent onLogin={onLogin} /> : <ChatComonent {...state} onAddMessage={addMessage} onAddRoboMessage={addRoboMessage} />} </div>
+  return <div className="wrapper">{!state.joined ? <EnterComponent onLogin={onLogin} /> : <ChatComonent {...state} onAddMessage={addMessage} />} </div>
 
 }
 
