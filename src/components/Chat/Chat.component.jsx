@@ -61,6 +61,12 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
     setmessageValue("");
   };
 
+  const sendIgnoredMessage = () => {
+    socket.emit("CHAT:IGNORE_MESSAGE", messagesData);
+    onAddMessage({ userName, text: messageValue });
+    setmessageValue("");
+  };
+
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
@@ -122,6 +128,13 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
             onClick={sendRandomMessage}
           >
             Send Random message
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={sendIgnoredMessage}
+          >
+            Ignore message
           </button>
         </form>
       </div>

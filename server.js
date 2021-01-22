@@ -82,6 +82,16 @@ io.on('connection', socket => {
         socket.to(chatID).broadcast.emit('CHAT:RANDOM_MESSAGE', messageData);
     });
 
+    socket.on('CHAT:IGNORE_MESSAGE', ({ chatID, userName, text }) => {
+        const messageData = {
+            userName,
+            chatID,
+            text
+        };
+        chat.get(chatID).get('messages').push(messageData);
+        socket.to(chatID).broadcast.emit('CHAT:IGNORE_MESSAGE', messageData);
+    });
+
     socket.on('disconnect', () => {
         chat.forEach((value, chatID) => {
 
