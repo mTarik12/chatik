@@ -10,6 +10,10 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
 
   const messagesData = { userName, chatID, text: messageValue };
 
+  const setTimerForSpamBot = (max, min) => {
+    return Math.floor(Math.random() * (max + 1 - min) + min);
+  };
+
   const sendMessage = () => {
     socket.emit("CHAT:NEW_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
@@ -19,7 +23,7 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
   const sendRoboMessage = () => {
     socket.emit("CHAT:ROBO_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
-    onAddMessage({ userName, text: messageValue });
+    onAddMessage({ userName: "Echo bot", text: messageValue });
     setmessageValue("");
   };
 
@@ -28,10 +32,32 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
     onAddMessage({ userName, text: messageValue });
     setTimeout(() => {
       onAddMessage({
-        userName,
+        userName: "Reverse bot",
         text: messageValue.split("").reverse().join(""),
       });
     }, 3000);
+    setmessageValue("");
+  };
+
+  const sendRandomMessage = () => {
+    const spam = [
+      "Good evening",
+      "How are you doing?",
+      "Good job!",
+      "Hi!",
+      "Not good...",
+      "Let's work!",
+      "I want to go home",
+      "What is your name?",
+      "My name is Spam bot...",
+    ];
+
+    socket.emit("CHAT:RANDOM_MESSAGE", messagesData);
+    onAddMessage({ userName, text: messageValue });
+    setInterval(() => {
+      const randomSpam = Math.floor(Math.random() * 9);
+      onAddMessage({ userName: "Spam bot", text: spam[randomSpam] });
+    }, setTimerForSpamBot(121000, 10000));
     setmessageValue("");
   };
 
@@ -89,6 +115,13 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
             onClick={sendReverseMessage}
           >
             Send Reverse message
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={sendRandomMessage}
+          >
+            Send Random message
           </button>
         </form>
       </div>

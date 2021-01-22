@@ -52,6 +52,7 @@ const App = () => {
     socket.on('CHAT:NEW_MESSAGE', addMessage);
     socket.on('CHAT:ROBO_MESSAGE', addMessage);
     socket.on('CHAT:REVERSE_MESSAGE', addMessage);
+    socket.on('CHAT:RANDOM_MESSAGE', addMessage);
   }, []);
 
 
