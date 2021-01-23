@@ -4,7 +4,9 @@ import socket from "../../socket";
 
 import "./Chat.style.css";
 
-const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
+// TODO fix users, user
+const ChatComponent = ({ users,user, messages, userName, chatID, onAddMessage }) => {
+  const currentUser = JSON.parse(localStorage.getItem('chatik-user'));
   const [messageValue, setmessageValue] = useState("");
   const messagesRef = useRef(null);
 
@@ -15,7 +17,8 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
   };
 
   const sendMessage = () => {
-    socket.emit("CHAT:NEW_MESSAGE", messagesData);
+    //const chatId = `${}`
+    socket.broadcast.to('').emit("CHAT:NEW_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
     setmessageValue("");
   };
@@ -70,16 +73,15 @@ const ChatComponent = ({ users, messages, userName, chatID, onAddMessage }) => {
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
-
   return (
     <div className="chat">
       <div className="chat-users">
         Chat: <b>{chatID}</b>
         <hr />
-        <b>Online: {users.length}</b>
+        <b>Online: {Object.values(users).length}</b>
         <ul>
-          {users.map((name, index) => (
-            <li key={name + index}>{name}</li>
+          {Object.values(users).map((user, index) => (
+            <li key={index}>{user.userName}, online:{user.online.toString()}</li>
           ))}
         </ul>
       </div>
