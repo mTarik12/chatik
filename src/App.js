@@ -81,6 +81,13 @@ const App = () => {
     setUsers({ ...state.users, ...chat })
   };
 
+  const onNewChatID = (newChatIds) => {
+    dispatch({
+      type: 'NEW_CHAT_ID',
+      payload: newChatIds
+    });
+  };
+
   useEffect(() => {
     onEnter();
     // socket.on('CHAT:SET_USERS', setUsers);
@@ -94,6 +101,7 @@ const App = () => {
     socket.on('NEW_USER_JOINED', onNewUserJoined);
     socket.on('USER_GENERATED', onUserGenerated);
     socket.on('USERS_LIST_CHANGED', onUserListChanged);
+    socket.on('NEW_CHAT_ID', onNewChatID);
 
   }, []);
 

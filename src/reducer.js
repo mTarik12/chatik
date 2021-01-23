@@ -26,6 +26,12 @@ export default (state, action) => {
                 users: action.payload.users,
                 messages: action.payload.messages,
             };
+
+        case 'NEW_CHAT_ID':
+            return {
+                ...state,
+                chatID: action.payload,
+            };
         default:
             return state;
     }

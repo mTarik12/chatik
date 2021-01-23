@@ -85,14 +85,15 @@ io.on('connection', socket => {
         socket.join(newChatId);
     });
 
-    socket.on('CHAT:NEW_MESSAGE', ({ chatID, userName, text }) => {
+    socket.on('CHAT_NEW_MESSAGE', ({ chatID, userName, text }) => {
         const messageData = {
             userName,
             chatID,
             text
         };
-        chat.get(chatID).get('messages').push(messageData);
-        socket.to(chatID).broadcast.emit('CHAT:NEW_MESSAGE', messageData);
+        console.log(messageData);
+        // chat.get(chatID).get('messages').push(messageData);
+        socket.to(chatID).broadcast.emit('CHAT_NEW_MESSAGE', messageData);
     });
 
     socket.on('CHAT:ROBO_MESSAGE', ({ chatID, userName, text }) => {
@@ -166,5 +167,6 @@ function connectUserToAllChats(socket, chat, user) {
 
     socket.broadcast.emit('USERS_LIST_CHANGED', { chat });
     socket.broadcast.emit('NEW_USER_JOINED', { newUser: user, newChatIds });
-    console.log('newChatIds',newChatIds)
+    console.log('newChatIds', newChatIds);
+    socket.emit('NEW_CHAT_ID', newChatIds);
 }

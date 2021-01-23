@@ -5,8 +5,15 @@ import socket from "../../socket";
 import "./Chat.style.css";
 
 // TODO fix users, user
-const ChatComponent = ({ users,user, messages, userName, chatID, onAddMessage }) => {
-  const currentUser = JSON.parse(localStorage.getItem('chatik-user'));
+const ChatComponent = ({
+  users,
+  user,
+  messages,
+  userName,
+  chatID,
+  onAddMessage,
+}) => {
+  const currentUser = JSON.parse(localStorage.getItem("chatik-user"));
   const [messageValue, setmessageValue] = useState("");
   const messagesRef = useRef(null);
 
@@ -17,8 +24,7 @@ const ChatComponent = ({ users,user, messages, userName, chatID, onAddMessage })
   };
 
   const sendMessage = () => {
-    //const chatId = `${}`
-    socket.broadcast.to('').emit("CHAT:NEW_MESSAGE", messagesData);
+    socket.emit("CHAT_NEW_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
     setmessageValue("");
   };
@@ -81,7 +87,9 @@ const ChatComponent = ({ users,user, messages, userName, chatID, onAddMessage })
         <b>Online: {Object.values(users).length}</b>
         <ul>
           {Object.values(users).map((user, index) => (
-            <li key={index}>{user.userName}, online:{user.online.toString()}</li>
+            <li key={index}>
+              {user.userName}, online:{user.online.toString()}
+            </li>
           ))}
         </ul>
       </div>
