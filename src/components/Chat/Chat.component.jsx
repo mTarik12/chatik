@@ -15,9 +15,16 @@ const ChatComponent = ({
 }) => {
   const currentUser = JSON.parse(localStorage.getItem("chatik-user"));
   const [messageValue, setmessageValue] = useState("");
+  const [typing, setTyping] = useState(false);
   const messagesRef = useRef(null);
 
+  console.log(messages);
   const messagesData = { userName, chatID, text: messageValue };
+
+  const handleChanged = (e) => {
+    setmessageValue(e.target.value);
+    setTyping(true);
+  };
 
   const setTimerForSpamBot = (max, min) => {
     return Math.floor(Math.random() * (max + 1 - min) + min);
@@ -27,6 +34,7 @@ const ChatComponent = ({
     socket.emit("CHAT_NEW_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
     setmessageValue("");
+    setTyping(false);
   };
 
   const sendRoboMessage = () => {
@@ -105,11 +113,12 @@ const ChatComponent = ({
           ))}
         </div>
         <form>
+          <div>{typing ? "User is typing..." : ""}</div>
           <textarea
             className="form-control"
             rows="3"
             value={messageValue}
-            onChange={(e) => setmessageValue(e.target.value)}
+            onChange={handleChanged}
           ></textarea>
           <button
             type="button"
