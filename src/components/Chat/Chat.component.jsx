@@ -37,6 +37,13 @@ const ChatComponent = ({
     setTyping(false);
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   const sendRoboMessage = () => {
     socket.emit("CHAT:ROBO_MESSAGE", messagesData);
     onAddMessage({ userName, text: messageValue });
@@ -119,6 +126,7 @@ const ChatComponent = ({
             rows="3"
             value={messageValue}
             onChange={handleChanged}
+            onKeyPress={handleKeyPress}
           ></textarea>
           <button
             type="button"
