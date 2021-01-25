@@ -8,7 +8,6 @@ import "./Chat.style.css";
 import ChatMessages from "../ChatMessages/ChatMessages.component";
 import ChatList from "../ChatsList/ChatsList.component";
 
-// TODO fix users, user
 const ChatComponent = ({ users, chatIds, searchValue, setSearchValue }) => {
   const currentUser = JSON.parse(localStorage.getItem("chatik-user"));
   const [selectedUser, setSelectedUser] = useState();
