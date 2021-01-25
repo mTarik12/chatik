@@ -11,7 +11,7 @@ Please use this reference to start using "chatik":
 8. Enjoy:)
 
 -------------**outro**--------------
-If I had more time I would:
+##If I had more time I would:
 
 1. take care about UI more carefully (program logic implement took far more time than I expected):
 
