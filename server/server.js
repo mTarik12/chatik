@@ -1,4 +1,6 @@
-const app = require('express')();
+const express = require('express');
+const path = require('path');
+const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server, {
     cors: {
@@ -7,10 +9,61 @@ const io = require('socket.io')(server, {
         allowedHeaders: ["*"],
     }
 });
-
 const { generateNewUser } = require('./utilsService');
 
-//app.use(express.json());
+const spam = [
+    "Good evening",
+    "How are you doing?",
+    "Good job!",
+    "Hi!",
+    "Not good...",
+    "Let's work!",
+    "I want to go home",
+    "What is your name?",
+    "My name is Spam bot...",
+];
+
+const IDS = {
+    ECHO_BOT_ID: 'ECHO-BOT-ID',
+    REVERSE_BOT_ID: 'REVERSE-BOT-ID',
+    SPAM_BOT_ID: 'SPAM-BOT-ID',
+    IGNORE_BOT_ID: 'IGNORE-BOT-ID',
+}
+
+const chat = {
+    [IDS.ECHO_BOT_ID]: {
+        online: true,
+        sessiondId: 'online',
+        id: IDS.ECHO_BOT_ID,
+        userAvatarName: "echo_avatar",
+        userName: "Echo bot",
+    },
+    [IDS.REVERSE_BOT_ID]: {
+        online: true,
+        sessiondId: 'online',
+        id: IDS.REVERSE_BOT_ID,
+        userAvatarName: "reverse_avatar",
+        userName: "Reverse bot",
+    },
+    [IDS.SPAM_BOT_ID]: {
+        online: true,
+        sessiondId: 'online',
+        id: IDS.SPAM_BOT_ID,
+        userAvatarName: "spam_avatar",
+        userName: "Spam bot",
+    },
+    [IDS.IGNORE_BOT_ID]: {
+        online: true,
+        sessiondId: 'online',
+        id: IDS.IGNORE_BOT_ID,
+        userAvatarName: "ignore_avatar",
+        userName: "Ignore bot",
+    }
+};
+
+
+let global_chatIds = [];
+
 
 const PORT = 8080;
 server.listen(PORT, (err) => {
@@ -21,8 +74,6 @@ server.listen(PORT, (err) => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
-const chat = {};
-
 app.options("/*", function (req, res, next) {
     setAccessHeaders(res);
     res.send(200);
@@ -32,8 +83,9 @@ app.use((req, res, next) => {
     setAccessHeaders(res);
     next();
 });
+app.use(express.static('public'));
 
-app.get('/chat/:id', (req, res) => {
+app.get('/avatar/:id', (req, res) => {
     const { id: chatID } = req.params;
     console.log(chatID);
     if (chat.has(chatID)) {
@@ -50,12 +102,32 @@ app.get('/chats', (req, res) => {
     res.send({ users: chat });
 });
 
+const getRandomTimeout = () => {
+    const getRandomArbitrary = (min, max) => Math.random() * (max - min) + min;
+    return getRandomArbitrary(10, 120) * 1000;
+}
 
+const sendSpam = (socket) => {
+    const timeoutId = setTimeout(() => {
+        socket.emit('MESSAGE_RECEIVED', {
+            text: spam[Math.floor(Math.random() * 9)],
+            senderId: IDS.SPAM_BOT_ID
+        });
+        clearTimeout(timeoutId);
+        sendSpam(socket);
+    }, getRandomTimeout())
+}
 
 io.on('connection', socket => {
 
+    sendSpam(socket)
 
     socket.on('CONNECT_USER_TO_ALL_CHATS', ({ user }) => {
+
+        if (!chat[user.id]) {
+            chat[user.id] = user;
+            socket.broadcast.emit('USERS_LIST_CHANGED', { chat });
+        };
         console.log('user', user, 'chat', chat)
         if (chat[user.id]) {
             chat[user.id].online = true;
@@ -85,56 +157,25 @@ io.on('connection', socket => {
         socket.join(newChatId);
     });
 
-    socket.on('CHAT_NEW_MESSAGE', ({ chatID, userName, text }) => {
-        const messageData = {
-            userName,
-            chatID,
-            text
-        };
-        console.log(messageData);
-        // chat.get(chatID).get('messages').push(messageData);
-        socket.to(chatID).broadcast.emit('CHAT_NEW_MESSAGE', messageData);
-    });
+    socket.on('MESSAGE_SENT', ({ chatId, text, senderId }) => {
+        switch (chatId.replace(senderId, '').replace('_', '')) {
+            case IDS.ECHO_BOT_ID:
+                socket.emit('MESSAGE_RECEIVED', { text, senderId: IDS.ECHO_BOT_ID });
+                break;
+            case IDS.REVERSE_BOT_ID:
+                setTimeout(() => {
+                    socket.emit('MESSAGE_RECEIVED', {
+                        text: text.split('').reverse().join(''),
+                        senderId: IDS.REVERSE_BOT_ID
+                    });
+                }, 3000);
+                break;
 
-    socket.on('CHAT:ROBO_MESSAGE', ({ chatID, userName, text }) => {
-        const messageData = {
-            userName,
-            chatID,
-            text
-        };
-        chat.get(chatID).get('messages').push(messageData);
-        socket.to(chatID).broadcast.emit('CHAT:ROBO_MESSAGE', messageData);
-    });
+            default:
+                socket.to(chatId).emit('MESSAGE_RECEIVED', { text, senderId });
 
-    socket.on('CHAT:REVERSE_MESSAGE', ({ chatID, userName, text }) => {
-        const messageData = {
-            userName,
-            chatID,
-            text
-        };
-        chat.get(chatID).get('messages').push(messageData);
-        socket.to(chatID).broadcast.emit('CHAT:REVERSE_MESSAGE', messageData);
-    });
-
-    socket.on('CHAT:RANDOM_MESSAGE', ({ chatID, userName, text }) => {
-        const messageData = {
-            userName,
-            chatID,
-            text
-        };
-        chat.get(chatID).get('messages').push(messageData);
-        socket.to(chatID).broadcast.emit('CHAT:RANDOM_MESSAGE', messageData);
-    });
-
-    socket.on('CHAT:IGNORE_MESSAGE', ({ chatID, userName, text }) => {
-        const messageData = {
-            userName,
-            chatID,
-            text
-        };
-        chat.get(chatID).get('messages').push(messageData);
-        socket.to(chatID).broadcast.emit('CHAT:IGNORE_MESSAGE', messageData);
-    });
+        }
+    })
 
     socket.on('disconnect', () => {
         Object.keys(chat).forEach(userKey => {
@@ -159,6 +200,9 @@ function connectUserToAllChats(socket, chat, user) {
     const newChatIds = [];
 
     Object.keys(chat).forEach(connectedUserId => {
+        if (connectedUserId === user.id) {
+            return;
+        };
         const newChatId = `${connectedUserId}_${user.id}`;
         newChatIds.push(newChatId);
         // create new room and join
@@ -167,6 +211,11 @@ function connectUserToAllChats(socket, chat, user) {
 
     socket.broadcast.emit('USERS_LIST_CHANGED', { chat });
     socket.broadcast.emit('NEW_USER_JOINED', { newUser: user, newChatIds });
-    console.log('newChatIds', newChatIds);
-    socket.emit('NEW_CHAT_ID', newChatIds);
+
+    //TEST
+    //global_chatIds = [...global_chatIds, ...newChatIds];
+    global_chatIds = Array.from(new Set([...global_chatIds, ...newChatIds]));
+    console.log('global_chatIds BE:', global_chatIds)
+
+    io.emit('CHAT_IDS_ADDED', { global_chatIds })
 }

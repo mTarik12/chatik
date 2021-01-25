@@ -1,17 +1,18 @@
 const { v4: uuidv4 } = require('uuid');
 
 const avatarNames = ['a', 'b', 'c', 'd', 'e'];
+const names = [
+    'John', 'Emily', 'Edik', 'Andry', 'Leo'
+];
 
 module.exports = {
     generateNewUser: () => {
         const random = Math.floor(Math.random() * avatarNames.length);
-        const u =  {
+        return {
             id: uuidv4(),
-            userName: makeid(9),
+            userName: names[Math.floor(Math.random() * names.length)],
             userAvatarName: avatarNames[random]
         }
-        console.log('generate new user',u);
-        return u;
     }
 }
 
