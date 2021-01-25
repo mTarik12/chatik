@@ -82,14 +82,13 @@ const ChatComponent = ({ users, chatIds, searchValue, setSearchValue }) => {
             <ChatList users={users} setSelectedUser={setSelectedUser} />
           </TabPanel>
         </Tabs>
-        <div>
-          <input
-            className="search-control"
-            placeholder="Search..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          ></input>
-        </div>
+        <div></div>
+        <input
+          className="search-control"
+          placeholder="Search..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        ></input>
       </div>
     </div>
   );

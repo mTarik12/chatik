@@ -42,7 +42,7 @@ const ChatMessages = ({ user, chatIds, sendMessage, messages }) => {
         {avatar.config && (
           <img src={avatar.config.url} width="120" height="120" alt="''" />
         )}
-        <div>
+        <div className="top-text-user">
           <b>{user.userName}</b>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -76,7 +76,6 @@ const ChatMessages = ({ user, chatIds, sendMessage, messages }) => {
         <input
           className="form-control"
           placeholder="Start chating!"
-          rows="1.8"
           value={messageValue}
           onChange={(e) => setMessageValue(e.target.value)}
           onKeyPress={handleKeyPress}
