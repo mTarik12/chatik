@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import "./ChatListItem.style.css";
 
 const ChatListItemComponent = ({ user }) => {
   const [avatar, setAvatar] = useState("");
@@ -13,7 +14,7 @@ const ChatListItemComponent = ({ user }) => {
   }, []);
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="user-item">
       <div>
         {avatar.config && (
           <img src={avatar.config.url} width="50" height="50" alt="''" />
