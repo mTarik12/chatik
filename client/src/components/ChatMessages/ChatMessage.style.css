@@ -18,7 +18,6 @@
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  margin-top: 100px;
   padding-top: 20px;
   padding-bottom: 20px;
   padding-left: 20px;
@@ -43,10 +42,10 @@
 }
 
 .sent-message p {
-  background-color: pink;
+  background-color: rgb(116, 50, 61);
 }
 .received-message p {
-  background-color: blue;
+  background-color: rgb(22, 22, 207);
 }
 
 .message span {
@@ -90,4 +89,15 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
+}
+
+.top-user {
+  display: flex;
+  font-size: 30px;
+  background-color: rgb(181, 226, 240);
+}
+
+.top-user p {
+  font-size: small;
+  margin-left: auto;
 }

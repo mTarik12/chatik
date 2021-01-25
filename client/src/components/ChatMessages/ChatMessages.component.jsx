@@ -38,10 +38,23 @@ const ChatMessages = ({ user, chatIds, sendMessage, messages }) => {
 
   return (
     <div className="chat-messages">
-      <div>
-        <div>{user.userName}</div>
+      <div className="top-user">
+        {avatar.config && (
+          <img src={avatar.config.url} width="120" height="120" alt="''" />
+        )}
         <div>
-          <img src={avatar.config.url} width="50" height="50" alt="''" />
+          <b>{user.userName}</b>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus
+            PageMaker including versions of Lorem Ipsum.
+          </p>
         </div>
       </div>
       <div className="messages">
