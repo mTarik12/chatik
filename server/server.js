@@ -82,17 +82,6 @@ app.use((req, res, next) => {
 });
 app.use(express.static("public"));
 
-// app.get("/avatar/:id", (req, res) => {
-//   const { id: chatID } = req.params;
-//   console.log(chatID);
-//   if (chat.has(chatID)) {
-//     res.send({
-//       users: [...chat.get(chatID).get("users").values()],
-//       messages: [...chat.get(chatID).get("messages").values()],
-//     });
-//   } else res.send({ users: [], messages: [] });
-// });
-
 app.get("/chats", (req, res) => {
   //TODO fix naming
   res.send({ users: chat });
