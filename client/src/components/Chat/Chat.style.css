@@ -47,7 +47,7 @@
 
 .form-control {
   margin-top: 20px;
-  width: 80%;
+  width: 75%;
   margin-left: 20px;
   border: 1px solid #39c;
   height: 50%;
@@ -76,5 +76,5 @@
 }
 
 .react-tabs {
-  margin-bottom: 155px;
+  margin-bottom: 75%;
 }
