@@ -73,13 +73,14 @@ const ChatMessages = ({ user, chatIds, sendMessage, messages }) => {
           : "No messages yet"}
       </div>
       <div className="send-area">
-        <textarea
+        <input
           className="form-control"
+          placeholder="Start chating!"
           rows="1.8"
           value={messageValue}
           onChange={(e) => setMessageValue(e.target.value)}
           onKeyPress={handleKeyPress}
-        ></textarea>
+        ></input>
         <button type="button" className="btn" onClick={onSendMessage}>
           Send message
         </button>
